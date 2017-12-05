@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Proximity Chat</title>
+        <style>
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                body { font: 13px Helvetica, Arial; }
+                form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+                form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+                form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+                #messages { list-style-type: none; margin: 0; padding: 0; }
+                #messages li { padding: 5px 10px; }
+                #messages li:nth-child(odd) { background: #eee; }
+        </style>
+    </head>
+    <body>
+        <ul id="messages"></ul>
+        <form action="">
+            <input id="m" autocomplete="off" /><button>Send</button>
+        </form>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+        <script>
+            $(function () {
+    var socket = io.connect(192.168.0.43:3000);
+
+    /*test geolocation*/
+    if(navigator.gelocation){
+        alert("browser supports geolocation");
+
+        /*now confirm that geolocation is enabled by user.  If not, throw error*/
+        navigator.geolocation.getCurrentPosition(function(p){
+            alert("geolocation enabled");
+
+            /*set a listener for location requests*/
+            socket.on('request location', function(){
+                alert("location requested");
+                navigator.getCurrentPosition(function(position){
+                    socket.emit('send location', {lat : position.coords.latitude, lng: position.coords.longitude, });
+                }, showError(error));
+            });
+        }, showError(error));
+
+    /*send alert if geolocation not supported by browser*/
+    } else {
+        alert("Geolocation is not supported by this broswer");
+    }
+
+
+    /*fired when form button is pressed*/
+    $('form').submit(function(){
+        socket.emit('message to server', $('#m').val());
+        $('#m').val('');
+        return false;
+    });
+
+    /*fired when client receives message from server*/
+    socket.on('message to clients', function(msg){
+        $('#messages').append($('<li>').text(msg));
+    });
+
+    /*fired when message is declined by server*/
+    socket.on('decline message', function(msg){
+        alert(msg);
+    });
+});
+
+
+function showError(error) {
+    alert("there was an error");
+    switch(error.code) {
+        case error.PERMISSION_DENIED:
+            alert("User denied the request for Geolocation.");
+            break;
+        case error.POSITION_UNAVAILABLE:
+            alert("Location information is unavailable.");
+            break;
+        case error.TIMEOUT:
+            alert("The request to get user location timed out.");
+            break;
+        case error.UNKNOWN_ERROR:
+            alert("An unknown error occurred.");
+            break;
+    }
+}
+        </script>
+    </body>
+</html>
