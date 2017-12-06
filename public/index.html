@@ -29,7 +29,7 @@
             function initialize(username) {
                 user.name = username;
 
-                socket = io.connect(window.location.hostname);
+                socket = io.connect(window.location.host);
 
                 /*set variables listed above
                 usersCount = 0;
