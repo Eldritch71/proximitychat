@@ -23,7 +23,7 @@
         <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
         <script>
             var user = {};
-                var usersCount, messagesList, messageBox, sendButton, socket;
+            var usersCount, messagesList, messageBox, sendButton, socket;
 
 
             function initialize(username) {
@@ -31,7 +31,7 @@
 
                 socket = io.connect(window.location.host);
 
-                /*set variables listed above
+                /*set variables listed above*/
                 usersCount = 0;
                 messagesList = document.getElementById("messages");
                 messageBox = document.getElementById("m");
@@ -129,5 +129,6 @@
                 }
             }
         </script>
+        <!--<script src="./SocketClient.js"></script>-->
     </body>
 </html>
