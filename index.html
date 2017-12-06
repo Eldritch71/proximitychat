@@ -16,8 +16,8 @@
     </head>
     <body>
         <ul id="messages"></ul>
-        <form action="">
-            <input id="m" autocomplete="off" /><button>Send</button>
+        <form action="" id="f">
+            <input id="m" autocomplete="off"/><button>Send</button>
         </form>
         <script src="/socket.io/socket.io.js"></script>
         <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
@@ -31,13 +31,19 @@
 
                 socket = io.connect(window.location.hostname);
 
+                /*set variables listed above
+                usersCount = 0;
+                messagesList = document.getElementById("messages");
+                messageBox = document.getElementById("m");
+                sendButton = document.getElementById("f");
+
                 /*setup basic function listeners*/
                 socket.on('user connected', addUser);
                 socket.on('user disconnected', removeUser);
                 socket.on('message to clients', receiveChatMessage);
                 socket.on('decline message', declineAlert);
 
-                sendButton.on('click', sendChatMessage);
+                sendButton.submit(sendChatMessage);
 
                 var userName = {name : user.name};
 
@@ -83,6 +89,7 @@
             function sendChatMessage(){
                 sendLocation();
                 socket.emit('message to server', messageBox.val());
+                messageBox.val('');
             }
 
             function declineAlert(msg){

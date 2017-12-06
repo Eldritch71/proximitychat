@@ -1,7 +1,7 @@
 ﻿var app = require('express')();
 var http = require('http').Server(app);
-var io = require('socket.io');
-var webSocket = io.listen(http);
+var io = require('socket.io')(http);
+var websocket = io.listen(http);
 
 var inRange = true;
 var connectedUsers = {};
@@ -14,7 +14,7 @@ app.get('/', function(req, res){
 when the event is received, the function is called*/
 
 /*fired when client connects to server*/
-io.on('connection', function(socket){
+websocket.sockets.on('connection', function(socket){
     console.log('a user connected');
 
     /*extra setup for client connecting*/
