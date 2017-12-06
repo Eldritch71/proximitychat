@@ -33,16 +33,16 @@
 
 
             function testGeo(){
-                if(navigator.gelocation){
+                if(navigator.geolocation){
                     alert("browser supports geolocation");
 
-                /*confirm that geolocation is enabled by user.  If not, throw error*/
-                navigator.geolocation.getCurrentPosition(function(p){
-                    alert("geolocation enabled");
+                    /*confirm that geolocation is enabled by user.  If not, throw error*/
+                    navigator.geolocation.getCurrentPosition(function(p){
+                        alert("geolocation enabled");
 
                     /*set a listener for location requests*/
-                    socket.on('request location', sendLocation);
-                }, showError(error));
+                        socket.on('request location', sendLocation);
+                    }, showError(error));
 
                 /*send alert if geolocation not supported by browser*/
                 } else {

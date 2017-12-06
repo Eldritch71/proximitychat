@@ -25,8 +25,9 @@
             var user = {};
             var usersCount, messagesList, messageBox, sendButton, socket;
 
+            window.onload = start;
 
-            (function (){
+            function start(){
                 user.name = "user";
 
                 socket = io.connect(window.location.host);
@@ -53,11 +54,11 @@
                 });
 
                 testGeo();
-            })();
+            };
 
 
             function testGeo(){
-                if(navigator.gelocation){
+                if(navigator.geolocation){
                     alert("browser supports geolocation");
 
                 /*confirm that geolocation is enabled by user.  If not, throw error*/
