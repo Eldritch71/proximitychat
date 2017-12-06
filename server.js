@@ -7,7 +7,7 @@ var inRange = true;
 var connectedUsers = {};
 
 app.get('/', function(req, res){
-    res.sendFile(__dirname + 'public/index.html');
+    res.sendFile(__dirname + '/public/index.html');
 });
 
 /*sets up a listener for a particular event
