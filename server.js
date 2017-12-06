@@ -1,46 +1,14 @@
-﻿var fs = require('fs'),
-url = require('url'),
-http = require('http'),
-path = require('path'),
-mime = require('mime');
-
-
-
-var app = require('express')();
-var httpServer = http.createServer(function(request, response){
-    var pathname = url.parse(request.url).pathname;
-    if (pathname == "/") pathname = "index.html";
-    var filename = path.join(process.cwd(), 'public', pathname);
-
-    path.exists(filename, function(exists){
-        if(!exists){
-            response.writeHead(404, {"Content-Type" : "text/plain" });
-            response.write("404 Not Found");
-            response.end();
-            return;
-        }
-
-        response.writeHead(200, { 'Content-Type': mime.lookup(filename) });
-        fs.createReadStream(filename, {
-            'flags': 'r',
-            'encoding': 'binary',
-            'mode': 0666,
-            'bufferSize': 4 * 1024
-        }).addListener("data", function(chunk) {
-            response.write(chunk, 'binary');
-        }).addListener("close", function() {
-            response.end();
-        });
-    });
-});
-
-
+﻿var app = require('express')();
+var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var websocket = io.listen(http);
 
 var inRange = true;
 var connectedUsers = {};
 
+app.get('/', function(req, res){
+    res.sendFile(__dirname + '/index.html');
+});
 
 /*sets up a listener for a particular event
 when the event is received, the function is called*/
@@ -102,4 +70,6 @@ websocket.sockets.on('connection', function(socket){
 /*when changes from out of range to in range, send event "in range" to all clients*/
     /*also set boolean to true*/
 
-http.listen(process.env.PORT || 3000, "0.0.0.0");
+http.listen(3000, function(){
+    console.log('listening on *3000');
+});
