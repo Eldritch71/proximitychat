@@ -8,7 +8,7 @@ mime = require('mime');
 
 var app = require('express')();
 var httpServer = http.createServer(function(request, response){
-    var pathname == url.parse(request.url).pathname;
+    var pathname = url.parse(request.url).pathname;
     if (pathname == "/") pathname = "index.html";
     var filename = path.join(process.cwd(), 'public', pathname);
 
