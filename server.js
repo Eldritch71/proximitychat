@@ -5,6 +5,7 @@ var websocket = io.listen(http);
 
 var inRange = true;
 var connectedUsers = {};
+var connectedKeys = {};
 
 app.get('/', function(req, res){
     res.sendFile(__dirname + '/public/index.html');
@@ -21,23 +22,24 @@ websocket.sockets.on('connection', function(socket){
     socket.on("join", function(user, sendKey){
         user.key = Date.now();
         connectedUsers[user.key] = user;
+        connectedKeys[socket.id] = user.key;
         sendKey(user.key);
-        socket.set('userkey', user.key);
         /*now broadcast the client connecting to all other clients*/
         socket.broadcast.emit('user connected', user);
     });
 
     /*fired when client disconnects from server*/
     socket.on('disconnect', function(){
-        socket.get('userkey', function(err, key){
+        var key = connectedKeys[socket.id];
+        if(key){
             var user = connectedUsers[key];
-            /*is user in connectedUsers?*/
             if(user){
                 delete connectedUsers[key];
+                delete connectedKeys[socket.id];
                 socket.broadcast.emit("user disconnected", key);
-                console.log('user disconnected');
+                console.log("user disconnected");
             }
-        });
+        }
     });
 
     /*fired when server receives message from client*/

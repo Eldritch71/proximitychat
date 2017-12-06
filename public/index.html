@@ -26,8 +26,8 @@
             var usersCount, messagesList, messageBox, sendButton, socket;
 
 
-            function initialize(username) {
-                user.name = username;
+            (function (){
+                user.name = "user";
 
                 socket = io.connect(window.location.host);
 
@@ -53,7 +53,7 @@
                 });
 
                 testGeo();
-            }
+            })();
 
 
             function testGeo(){
