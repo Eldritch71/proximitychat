@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8" />
-        <title>Proximity Chat | Login</title>
+        <title>Proximity Chat</title>
         <style>
                 * { margin: 0; padding: 0; box-sizing: border-box; }
                 body { font: 13px Helvetica, Arial; }
@@ -15,18 +15,17 @@
         </style>
     </head>
     <body>
-        <h1>Proximity Chat</h1>
-        <h2>Talk to Those Closest to You</h2>
-        <form action="" id="nicknameBox">
-            <input id="n" autocomplete="off"/><button>Enter</button>
+        <ul id="messages"></ul>
+        <form action="" id="f">
+            <input id="m" autocomplete="off"/><button>Send</button>
         </form>
-
         <script src="/socket.io/socket.io.js"></script>
         <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
         <script>
             var user = {};
             var usersCount, messagesList, messageBox, sendButton, socket;
 
+            window.onload = start;
 
             function start(){
                 user.name = "user";
