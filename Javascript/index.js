@@ -10,6 +10,10 @@ function start(){
 
 function testGeo(){
     if(navigator.geolocation){
+        alert("browser supports geolocation");
+
+        /*confirm that geolocation is enabled by user.  If not, throw error*/
+        /*navigator.geolocation.getCurrentPosition(enterChat, showError);*/
         enterChat();
     /*send alert if geolocation not supported by browser*/
     } else {
@@ -18,6 +22,8 @@ function testGeo(){
 }
 
 function enterChat(position) {
+    alert("Geolocation Enabled");
+
     /*connect to server*/
     socket = io.connect(window.location.host);
     /*check that nickname is not already being used*/
