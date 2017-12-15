@@ -96,7 +96,7 @@ websocket.sockets.on('connection', function(socket){
         }
     });
 
-    /*fired when server receives message from client*/
+    /*fired when server receives message from clienthhhh*/
     socket.on('message to server', function(key, msg){
         /*test 1: is user listed in connectedUsers?*/
         var user = connectedUsers[key];
