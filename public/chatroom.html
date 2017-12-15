@@ -43,6 +43,7 @@
                 socket.on('user disconnected', removeUser);
                 socket.on('message to clients', receiveChatMessage);
                 socket.on('decline message', declineAlert);
+                socket.on('request location', sendLocation);
 
                 sendButton.submit(sendChatMessage);
 
@@ -53,27 +54,7 @@
                     user.key = key;
                 });
 
-                testGeo();
             };
-
-
-            function testGeo(){
-                if(navigator.geolocation){
-                    alert("browser supports geolocation");
-
-                /*confirm that geolocation is enabled by user.  If not, throw error*/
-                navigator.geolocation.getCurrentPosition(function(p){
-                    alert("geolocation enabled");
-
-                    /*set a listener for location requests*/
-                    socket.on('request location', sendLocation);
-                }, showError(error));
-
-                /*send alert if geolocation not supported by browser*/
-                } else {
-                    alert("Geolocation is not supported by this broswer");
-                }
-            }
 
             function addUser (user){
                 ++usersCount;

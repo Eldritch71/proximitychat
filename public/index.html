@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <title>Proximity Chat | Login</title>
-        <link rel="stylesheet" type="text/css" href="Main.css">
+        <link rel="stylesheet" type="text/css" href="./public/Main.css">
     </head>
 
     <body>
@@ -35,13 +35,15 @@
             function testGeo(){
                 if(navigator.geolocation){
                     alert("browser supports geolocation");
-
+            
                     /*confirm that geolocation is enabled by user.  If not, throw error*/
-                    navigator.geolocation.getCurrentPosition(enterChat(position), showError(error));
+                    /*navigator.geolocation.getCurrentPosition(enterChat, showError);*/
                 /*send alert if geolocation not supported by browser*/
                 } else {
                     alert("Geolocation is not supported by this broswer");
                 }
+
+                return false;
             }
 
             function enterChat(position) {
