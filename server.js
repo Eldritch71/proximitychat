@@ -152,7 +152,7 @@ websocket.sockets.on('connection', function(socket){
         }
     }
 
-    window.setInterval(updateInRange, 2000);
+    setInterval(updateInRange, 2000);
 });
 
 
