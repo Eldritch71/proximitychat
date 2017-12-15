@@ -31,12 +31,12 @@ websocket.sockets.on('connection', function(socket){
 
     /*extra setup for client connecting*/
     socket.on("compare nicknames", function(nickname, confirmJoin){
-        for(var key in connectedUsers){
+        /*for(var key in connectedUsers){
             if(connectedUsers[key].name == nickname){
                 confirmJoin(false, key);
                 return;
             }
-        }
+        }*/
 
         var newKey = Date.now();
         connectedUsers[newKey] = {name: nickname, hold: false, lat: 0.0, lng: 0.0};
