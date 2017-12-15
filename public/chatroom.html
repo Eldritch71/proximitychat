@@ -9,7 +9,7 @@
     <body>
         <ul id="messages"></ul>
         <form action="" id="f">
-            <input id="m" autocomplete="off"/><button onclick="sendChatMessage">Send</button>
+            <input id="m" autocomplete="off"/><button onclick="sendChatMessage(); return false;">Send</button>
         </form>
 
         <script src="/socket.io/socket.io.js"></script>

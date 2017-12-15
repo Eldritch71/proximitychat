@@ -44,7 +44,7 @@ websocket.sockets.on('connection', function(socket){
         confirmJoin(true, newKey);
 
         /*now broadcast the client connecting to all other clients*/
-        socket.broadcast.emit('user connected', nickname);
+        /*socket.broadcast.emit('user connected', nickname);*/
         console.log(nickname + " has joined");
     });
 
@@ -70,7 +70,7 @@ websocket.sockets.on('connection', function(socket){
         confirmJoin(true, newKey);
 
         /*now broadcast the client connecting to all other clients*/
-        socket.broadcast.emit('user connected', "user");
+        /*socket.broadcast.emit('user connected', "user");*/
         console.log("user" + " has joined");
     });
 
@@ -90,30 +90,28 @@ websocket.sockets.on('connection', function(socket){
                 if(!connectedUsers[key].hold){
                     delete connectedUsers[key];
                 }
-                socket.broadcast.emit("user disconnected", key);
+                /*socket.broadcast.emit("user disconnected", key);*/
                 console.log("user disconnected");
             }
         }
     });
 
     /*fired when server receives message from client*/
-    socket.on('message to server', function(msg){
-        socket.get('userkey', function(err, key){
-            /*test 1: is user listed in connectedUsers?*/
-            var user = connectedUsers[key];
-            if(user){
-                /*test 2: is everyone within range of each other?*/
-                if(inRange){
-                    console.log('message: ' + msg);
-                    var data = { key: key, sender: user.name, message: msg };
-                    io.emit('message to clients', data);
-                } else {
-                    socket.emit('decline message', "sorry, but you are not close enough to recipient(s)");
-                }
+    socket.on('message to server', function(key, msg){
+        /*test 1: is user listed in connectedUsers?*/
+        var user = connectedUsers[key];
+        if(user){
+            /*test 2: is everyone within range of each other?*/
+            if(inRange){
+                console.log('message: ' + msg);
+                var data = { key: key, sender: user.name, message: msg };
+                io.emit('message to clients', data);
             } else {
-                socket.emit('decline message', "sorry, but you are not connected to the group");
+                socket.emit('decline message', "sorry, but you are not close enough to recipient(s)");
             }
-        });
+        } else {
+            socket.emit('decline message', "sorry, but you are not connected to the group");
+        }
     });
 
     socket.on('send location', function(key, data){

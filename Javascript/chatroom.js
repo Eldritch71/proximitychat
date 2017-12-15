@@ -62,9 +62,8 @@
 
             function sendChatMessage(){
                 alert("sending");
-                sendLocation();
-                socket.emit('message to server', messageBox.val());
-                messageBox.val('');
+                socket.emit('message to server', user.key, messageBox.value);
+                messageBox.value = "";
             }
 
             function declineAlert(msg){
