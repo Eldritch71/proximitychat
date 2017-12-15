@@ -4,6 +4,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var websocket = io.listen(http);
 
+var sendDistance = .00015;
 var inRange = true;
 var connectedUsers = {};
 var connectedKeys = {};
@@ -38,7 +39,7 @@ websocket.sockets.on('connection', function(socket){
         }
 
         var newKey = Date.now();
-        connectedUsers[newKey] = {name: nickname, hold: false};
+        connectedUsers[newKey] = {name: nickname, hold: false, lat: 0.0, lng: 0.0};
         connectedKeys[socket.id] = newKey;
         confirmJoin(true, newKey);
 
@@ -115,9 +116,47 @@ websocket.sockets.on('connection', function(socket){
         });
     });
 
-    socket.on('send location', function(data){
-        console.log(data.lat + ", " + data.lng)});
+    socket.on('send location', function(key, data){
+        connectedUsers[key].lat = data.lat;
+        connectedUsers[key].lng = data.lng;
+        console.log(connectedUsers[key].name + ": " + data.lat + ", " + data.lng);
+    });
+
+
+    function updateInRange(){
+        var count = 0;
+        var latSum = 0.0;
+        var lngSum = 0.0;
+        for(var key in connectedUsers){
+            count++;
+            latSum = latSum + connectedUsers[key].lat;
+            lngSum = lngSum + connectedUsers[key].lng;
+        }
+        var latAvg = latSum / count;
+        var lngAvg = lngSum / count;
+
+        for(key in connectedUsers){
+            if(Math.abs(latAvg - connectedUsers[key].lat) > sendDistance || Math.abs(lngAvg - connectedUsers[key].lng) > sendDistance){
+                /*out of range*/
+                if(inRange){
+                    io.emit('out of range');
+                    inRange = false;
+                    return;
+                }
+            }
+        }
+        /*in range*/
+        if(!inRange){
+            io.emit('in range');
+            inRange = true;
+        }
+    }
+
+    window.setInterval(updateInRange, 2000);
 });
+
+
+
 
 /*check the locations of each connected user in real time*/
 /*when changes from in range to out of range, send event "out of range" to all clients*/

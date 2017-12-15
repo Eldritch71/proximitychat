@@ -39,6 +39,8 @@
                 socket.on('message to clients', receiveChatMessage);
                 socket.on('decline message', declineAlert);
                 socket.on('request location', sendLocation);
+                socket.on('out of range', outOfRange);
+                socket.on('in range', inRange);
 
                 /*start watchPosition*/
                 id = navigator.geolocation.watchPosition(sendLocation, showError);
@@ -67,11 +69,18 @@
                 alert(msg);
             }
 
+            function outOfRange(){
+                messagesList.append("Out of range of other users");
+            }
+
+            function inRange(){
+                messagesList.append("Back in Range");
+            }
+
 
             function sendLocation(position){
-                alert("1");
                 var data = {lat : position.coords.latitude, lng : position.coords.longitude };
-                socket.emit('send location', data);
+                socket.emit('send location', user.key, data);
             }
 
             function showError(error) {
