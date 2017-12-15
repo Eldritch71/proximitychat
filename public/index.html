@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <title>Proximity Chat | Login</title>
-        <link rel="stylesheet" type="text/css" href="./public/Main.css">
+        <link rel="stylesheet" type="text/css" href="./Main.css">
     </head>
 
     <body>
@@ -13,7 +13,7 @@
             <h1>Proximity Chat</h1>
             <h2>Talk to Those Closest to You</h2>
             <form action="" class="nickname" id="f">
-                <input id="n" autocomplete="off" placeholder="Enter a Nickname" /><button onclick="testGeo()">Enter</button>
+                <input id="n" autocomplete="off" placeholder="Enter a Nickname" /><button onclick="testGeo(); return false;">Enter</button>
             </form>
         </div>
         <div class="side"></div>
@@ -23,31 +23,28 @@
         <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
         <script>
 
-            var enterButton;
-
             window.onload = start;
 
             function start(){
-                enterButton = document.getElementById("f");
                 alert("Proximity Chat requires that your browser supports geolocation services.  Make sure that geolocation is enabled on your browser before continuing.");
             }
 
             function testGeo(){
                 if(navigator.geolocation){
                     alert("browser supports geolocation");
-            
+
                     /*confirm that geolocation is enabled by user.  If not, throw error*/
                     /*navigator.geolocation.getCurrentPosition(enterChat, showError);*/
+                    enterChat();
                 /*send alert if geolocation not supported by browser*/
                 } else {
                     alert("Geolocation is not supported by this broswer");
                 }
-
-                return false;
             }
 
             function enterChat(position) {
                 alert("Geolocation Enabled");
+                window.location="./chatroom.html";
             }
 
             function showError(error) {
