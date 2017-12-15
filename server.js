@@ -1,4 +1,5 @@
-﻿var app = require('express')();
+﻿var express = require('express');
+var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var websocket = io.listen(http);
@@ -7,25 +8,39 @@ var inRange = true;
 var connectedUsers = {};
 var connectedKeys = {};
 
+
+/*html requests*/
 app.get('/', function(req, res){
     res.sendFile(__dirname + '/public/index.html');
 });
 
-/*sets up a listener for a particular event
-when the event is received, the function is called*/
+app.get('/chatroom.html', function(req, res){
+    res.sendFile(__dirname + '/public/chatroom.html');
+});
+
+/*access CSS and Javascript folders*/
+app.use(express.static(__dirname + '/CSS'));
+app.use(express.static(__dirname + '/Javascript'));
+
+
 
 /*fired when client connects to server*/
 websocket.sockets.on('connection', function(socket){
     console.log('a user connected');
 
     /*extra setup for client connecting*/
-    socket.on("join", function(user, sendKey){
-        user.key = Date.now();
-        connectedUsers[user.key] = user;
-        connectedKeys[socket.id] = user.key;
-        sendKey(user.key);
-        /*now broadcast the client connecting to all other clients*/
-        socket.broadcast.emit('user connected', user);
+    socket.on("compare nicknames", function(nickname, confirmJoin){
+        console.log("connection attempt");
+        if(connectedUsers[nickname]){
+            confirmJoin(false);
+        } else {
+            connectedUsers[nickname] = {};
+            connectedKeys[socket.id] = nickname;
+            confirmJoin(true);
+            /*now broadcast the client connecting to all other clients*/
+            socket.broadcast.emit('user connected', nickname);
+            console.log(nickname + " has joined");
+        }
     });
 
     /*fired when client disconnects from server*/
