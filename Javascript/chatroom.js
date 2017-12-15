@@ -1,12 +1,31 @@
 ﻿var user = {};
-            var usersCount, messagesList, messageBox, sendButton, socket;
+            var usersCount, messagesList, messageBox, sendButton, socket, id;
 
             window.onload = start;
 
             function start(){
-                user.name = "user";
-
                 socket = io.connect(window.location.host);
+
+                /*confirm that user has joined*/
+                /*socket.emit('reconnect', function(joined, key){
+                    if(joined){
+                        user.name = "user";
+                        user.key = key;
+                    } else {
+                        alert("bumped out");
+                        window.location="/";
+                    }
+                });*/
+
+                socket.emit('compare nicknames', "user", function(joined, key){
+                   if(joined){
+                        user.name = "user";
+                        user.key = key;
+                    } else {
+                        alert("bumped out");
+                        window.location="/";
+                    } 
+                });
 
                 /*set variables listed above*/
                 usersCount = 0;
@@ -21,13 +40,8 @@
                 socket.on('decline message', declineAlert);
                 socket.on('request location', sendLocation);
 
-                var userName = {name : user.name};
-
-                /*confirm that user has joined*/
-                socket.emit('join', userName, function(key){
-                    user.key = key;
-                });
-
+                /*start watchPosition*/
+                id = navigator.geolocation.watchPosition(sendLocation, showError);
             };
 
             function addUser (user){
@@ -54,18 +68,10 @@
             }
 
 
-            function sendLocation(){
+            function sendLocation(position){
                 alert("1");
-                if(navigator.geolocation){
-                    alert("2");
-                    navigator.geolocation.getCurrentPosition(function(position){
-                        alert("3");
-                        var data = {lat : position.coords.latitude, lng : position.coords.longitude };
-                        socket.emit('send location', data);
-                    }, showError(error));
-                } else {
-                    alert("Geolocation is not supported by this broswer");
-                }
+                var data = {lat : position.coords.latitude, lng : position.coords.longitude };
+                socket.emit('send location', data);
             }
 
             function showError(error) {

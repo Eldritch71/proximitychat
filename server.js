@@ -30,16 +30,52 @@ websocket.sockets.on('connection', function(socket){
 
     /*extra setup for client connecting*/
     socket.on("compare nicknames", function(nickname, confirmJoin){
-        console.log("connection attempt");
-        if(connectedUsers[nickname]){
-            confirmJoin(false);
+        for(var key in connectedUsers){
+            if(connectedUsers[key].name == nickname){
+                confirmJoin(false, key);
+                return;
+            }
+        }
+
+        var newKey = Date.now();
+        connectedUsers[newKey] = {name: nickname, hold: false};
+        connectedKeys[socket.id] = newKey;
+        confirmJoin(true, newKey);
+
+        /*now broadcast the client connecting to all other clients*/
+        socket.broadcast.emit('user connected', nickname);
+        console.log(nickname + " has joined");
+    });
+
+
+    /*fired when restablishing connection from switching pages*/
+    socket.on('reconnect', function(confirmJoin){
+        /*if(connectedUsers[key] && connectedUsers[key].hold){
+            connectedKeys[socket.id] = key;
+            var name = connectedUsers[key].name;
+            confirmJoin(true, name);
+            connectedUsers[key].hold = false;
+
+            socket.broadcast.emit('user connected', name);
+            console.log(name + " has rejoined");
         } else {
-            connectedUsers[nickname] = {};
-            connectedKeys[socket.id] = nickname;
-            confirmJoin(true);
-            /*now broadcast the client connecting to all other clients*/
-            socket.broadcast.emit('user connected', nickname);
-            console.log(nickname + " has joined");
+            confirmJoin(false);
+        }*/
+        console.log("reconnect attempt");
+
+        var newKey = Date.now();
+        connectedUsers[newKey] = {name: "user", hold: false};
+        connectedKeys[socket.id] = newKey;
+        confirmJoin(true, newKey);
+
+        /*now broadcast the client connecting to all other clients*/
+        socket.broadcast.emit('user connected', "user");
+        console.log("user" + " has joined");
+    });
+
+    socket.on("hold", function(key){
+        if(connectedUsers[key]){
+            connectedUsers[key].hold = true;
         }
     });
 
@@ -49,8 +85,10 @@ websocket.sockets.on('connection', function(socket){
         if(key){
             var user = connectedUsers[key];
             if(user){
-                delete connectedUsers[key];
                 delete connectedKeys[socket.id];
+                if(!connectedUsers[key].hold){
+                    delete connectedUsers[key];
+                }
                 socket.broadcast.emit("user disconnected", key);
                 console.log("user disconnected");
             }

@@ -1,6 +1,5 @@
 ﻿var socket;
 var nicknameBox;
-var user = {};
 
 window.onload = start;
 
@@ -28,9 +27,9 @@ function enterChat(position) {
     /*connect to server*/
     socket = io.connect(window.location.host);
     /*check that nickname is not already being used*/
-    socket.emit("compare nicknames", nicknameBox.value, function(joined){
+    socket.emit('compare nicknames', nicknameBox.value, function(joined, key){
         if(joined){
-            user.name = nicknameBox.value;
+            /*socket.emit("hold", key);*/
             window.location="/chatroom.html";
         } else {
             alert("someone else already has that nickname!  Choose another one.");
