@@ -132,6 +132,9 @@ websocket.sockets.on('connection', function(socket){
             latSum = latSum + connectedUsers[key].lat;
             lngSum = lngSum + connectedUsers[key].lng;
         }
+        if(count == 0){
+            return;
+        }
         var latAvg = latSum / count;
         var lngAvg = lngSum / count;
 
