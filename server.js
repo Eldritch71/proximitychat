@@ -141,8 +141,8 @@ websocket.sockets.on('connection', function(socket){
                 if(inRange){
                     io.emit('out of range');
                     inRange = false;
-                    return;
                 }
+                return;
             }
         }
         /*in range*/

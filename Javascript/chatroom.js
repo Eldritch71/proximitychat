@@ -55,7 +55,9 @@
             }
 
             function receiveChatMessage (data){
-                messagesList.append(data.message);
+                var newMsg = document.createElement('li');
+                newMsg.appendChild(document.createTextNode(data.msg));
+                messagesList.appendChild(newMsg);
             }
 
             function sendChatMessage(){
@@ -70,11 +72,15 @@
             }
 
             function outOfRange(){
-                messagesList.append("Out of range of other users");
+                var newMsg = document.createElement('li');
+                newMsg.appendChild(document.createTextNode("Out of Range"));
+                messagesList.appendChild(newMsg);
             }
 
             function inRange(){
-                messagesList.append("Back in Range");
+                var newMsg = document.createElement('li');
+                newMsg.appendChild(document.createTextNode("In Range"));
+                messagesList.appendChild(newMsg);
             }
 
 
