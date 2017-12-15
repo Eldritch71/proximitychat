@@ -7,7 +7,7 @@
                 socket = io.connect(window.location.host);
 
                 /*confirm that user has joined*/
-                /*socket.emit('reconnect', function(joined, key){
+                socket.emit('reconnect', function(joined, key){
                     if(joined){
                         user.name = "user";
                         user.key = key;
@@ -15,16 +15,6 @@
                         alert("bumped out");
                         window.location="/";
                     }
-                });*/
-
-                socket.emit('compare nicknames', "user", function(joined, key){
-                   if(joined){
-                        user.name = "user";
-                        user.key = key;
-                    } else {
-                        alert("bumped out");
-                        window.location="/";
-                    } 
                 });
 
                 /*set variables listed above*/
